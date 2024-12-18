@@ -27,11 +27,25 @@ paymentSchema = mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    booking: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Booking",
+      required: true,
+    },
   },
   {
     timestamps: true,
   }
 );
+
+paymentSchema.virtual("total_price").get(function () {
+  return this.booking ? this.booking.total_price : null;
+});
 
 const Payment = mongoose.model("Payment", paymentSchema);
 module.exports = Payment;
